@@ -1,0 +1,15 @@
+---
+- name: Simple Port Scanning Playbook
+  hosts: all
+  gather_facts: no
+  vars:
+    target_port: 80  # Ubah nomor port sesuai kebutuhan
+  tasks:
+    - name: Check if port {{ target_port }} is open
+      ansible.builtin.shell: "nc -zv {{ inventory_hostname }} {{ target_port }}"
+      register: scan_result
+      ignore_errors: yes
+
+    - name: Display port scan result
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} - Port {{ target_port }} is {{ 'open' if scan_result.rc == 0 else 'closed' }}"
